@@ -1,4 +1,4 @@
-# frontend
+# Smart Cookie Jar Frontend
 
 ## Project setup
 ```
@@ -15,15 +15,8 @@ npm run serve
 npm run build
 ```
 
-### Run your tests
-```
-npm run test
-```
+### Compiles and minifies for production chrome plugin
 
-### Lints and fixes files
 ```
-npm run lint
+npm run build-chrome
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
