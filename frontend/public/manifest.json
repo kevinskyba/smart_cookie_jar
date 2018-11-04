@@ -1,0 +1,23 @@
+{
+  "name": "Smart Cookie Jar",
+  "description": "...",
+  "version": "0.2",
+  "manifest_version": 2,
+  "icons": {
+    "64": "cookie_icons/64/100.png"
+  },
+  "permissions": [
+    "storage",
+    "notifications"
+  ],
+  "browser_action": {
+    "default_title": "Smart Cookie Jar",
+    "default_popup": "index.html"
+  },
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "content_security_policy": "script-src 'self' https://unpkg.com; object-src 'self'"
+}

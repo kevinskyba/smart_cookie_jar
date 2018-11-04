@@ -1,0 +1,10 @@
+media(args...)
+  output = null
+  for arg in args
+    // check for tuple
+    if arg[1]
+      push(output,unquote('(%s: %s)' % (arg[0] arg[1])))
+    else
+      push(output,unquote(arg))
+
+  unquote(s('%s',output))
