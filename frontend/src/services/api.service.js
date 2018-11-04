@@ -1,7 +1,6 @@
 import axios from "axios";
 import Vue from "vue";
 
-
 class APIService {
 
     constructor() {
@@ -10,13 +9,13 @@ class APIService {
 
     getStatus() {
         return new Promise((resolve, reject) => {
-            axios({ method: "GET", url: "..."}).then(res => {
-                if (res.data && res.data.status) {
-                    resolve(res.data.status);
+            axios({ method: "GET", url: process.env.VUE_APP_BACKEND_URL + '/lastobject'}).then(res => {
+                if (res.data && res.data.fillLevel !== undefined) {
+                    resolve(res.data.fillLevel);
                 } else {
-                    reject();
+                    reject("Something is wrong in the data: " + JSON.stringify(res.data));
                 }
-            }, err => {
+            }).catch(err => {
                 reject(err);
             });
         });

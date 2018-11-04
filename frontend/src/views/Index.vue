@@ -4,7 +4,7 @@
         <div class="status-text">Derzeit scheint die Dose zu <b>{{status}}%</b> mit Keksen befüllt zu sein.</div>
         <cookie class="cookie" v-bind:value="status"></cookie>
         <span class="legal-corner">Alle Angaben ohne Gewähr.<br>Der Rechtsweg ist ausgeschlossen.</span>
-        <footer>Created with VueJS, Java, Arduino and <img src="/cookie_icons/100.png">.</footer>
+        <footer>Created with VueJS, Spring, Arduino and <img src="/cookie_icons/100.png">.</footer>
     </div>
 </template>
 

@@ -14,13 +14,6 @@ class ChromeService {
     doInitialStuff() {
         document.querySelector("html").style.width = "400px";
         document.querySelector("html").style.height = "550px";
-
-        this.initialFillLevel = Rx.Observable.create((obs) => {
-            chrome.storage.local.get('fillLevel', (data) => {
-                obs.next(data);
-                obs.complete();
-            });
-        });
     }
 }
 

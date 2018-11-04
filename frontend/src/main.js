@@ -2,13 +2,13 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 
-import makeMockAPIService from './services/mockapi.service';
+import makeAPIService from './services/api.service';
 import makeChromeService from "./services/chrome.service";
 import makeDataService from "./services/data.service";
 
 Vue.config.productionTip = false;
 document.addEventListener('DOMContentLoaded', function() {
-    const apiService = makeMockAPIService();
+    const apiService = makeAPIService();
     const chromeService = makeChromeService();
     const dataService = makeDataService(chromeService, apiService);
 
