@@ -1,4 +1,4 @@
-package de.lhind.cookiejar.cookiejar.model;
+package de.cookiejar.cookiejar.model;
 
 import java.util.List;
 
