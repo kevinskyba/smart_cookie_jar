@@ -30,6 +30,7 @@ services:
 
   db:
     image: mysql:5.7
+    container_name: scj_database
     volumes:
       - "./db_data:/var/lib/mysql"
     restart: always
