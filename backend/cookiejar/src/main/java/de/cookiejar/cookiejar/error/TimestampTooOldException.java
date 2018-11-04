@@ -1,4 +1,4 @@
-package de.lhind.cookiejar.cookiejar.error;
+package de.cookiejar.cookiejar.error;
 
 import java.time.Instant;
 

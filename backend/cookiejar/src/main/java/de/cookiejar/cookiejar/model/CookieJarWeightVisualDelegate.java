@@ -1,4 +1,4 @@
-package de.lhind.cookiejar.cookiejar.model;
+package de.cookiejar.cookiejar.model;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import de.lhind.cookiejar.cookiejar.error.TimestampTooOldException;
+import de.cookiejar.cookiejar.error.TimestampTooOldException;
 
-public class CookieJarWeightVisualData {
+public class CookieJarWeightVisualDelegate {
 
 	private static final double EMPTY_WEIGHT_WITH_TOP = -6615392.0;
 	
@@ -20,7 +20,7 @@ public class CookieJarWeightVisualData {
 
 	private static final double MAXIMUM_WEIGHT = 1000.0;
 
-	private static final int TIME_LIMIT_IN_SECONDS_UNTIL_EXCEPTION = 30;
+	private static final int TIME_LIMIT_IN_SECONDS_UNTIL_EXCEPTION = 120;
 
 	// ./. empty weight with top
 	public static CookieJarWeightVO getAverageObject(CookieJarWeightRepository repository) {

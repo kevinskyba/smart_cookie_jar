@@ -1,4 +1,4 @@
-package de.lhind.cookiejar.cookiejar;
+package de.cookiejar.cookiejar;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -1,5 +1,5 @@
 
-package de.lhind.cookiejar.cookiejar.error;
+package de.cookiejar.cookiejar.error;
 import java.util.Map;
 
 import lombok.Getter;

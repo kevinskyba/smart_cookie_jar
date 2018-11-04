@@ -1,4 +1,4 @@
-package de.lhind.cookiejar.cookiejar;
+package de.cookiejar.cookiejar;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -12,8 +12,8 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import de.lhind.cookiejar.cookiejar.model.CookieJarWeight;
-import de.lhind.cookiejar.cookiejar.model.CookieJarWeightRepository;
+import de.cookiejar.cookiejar.model.CookieJarWeight;
+import de.cookiejar.cookiejar.model.CookieJarWeightRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
