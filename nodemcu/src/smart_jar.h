@@ -46,11 +46,40 @@ float read_scale_weight() {
     HX711 scale(DATAOUT, CLK);
     scale.power_up();
     scale.set_scale(SCALE_CALIBRATION_FACTOR);
-    float weight = scale.get_units(5);
-    scale.power_down();
-    Serial.print("Read scale weight: ");
-    Serial.println(weight, 2);
-    return weight;
+
+    while(true) {
+        int measurements[SCALE_WEIGHT_REPETITIONS];
+        for (int i = 0; i < SCALE_WEIGHT_REPETITIONS; i++) {
+            delay(SCALE_MEASUREMENT_DELAY);
+            measurements[i] = scale.get_units(5);
+            Serial.print(i + 1);
+            Serial.print(" / ");
+            Serial.print(SCALE_WEIGHT_REPETITIONS);
+            Serial.print(" Read scale weight: ");
+            Serial.println(measurements[i]);
+        }  
+
+        int firstMeasurement = measurements[0];
+        int average = firstMeasurement;
+        bool error = false;
+        for (int i = 1; i < SCALE_WEIGHT_REPETITIONS; i++) {
+            if (abs(firstMeasurement - measurements[i]) > SCALE_MAX_OFFSET) {
+                Serial.print("One measurement is beyond maximum offset: ");
+                Serial.println(measurements[i]);
+                Serial.println("Trying again...");
+                error = true;
+                break;
+            } else {
+                average += measurements[i];
+            }
+        }
+
+        if (error) continue;
+
+        scale.power_down();
+        average = average / SCALE_WEIGHT_REPETITIONS;
+        return average;
+    }
 }
 
 void send_data(float scaleWeight) {
@@ -69,7 +98,7 @@ void send_data(float scaleWeight) {
             Serial.print("Error sending data: ");
         }
     } else {
-        Serial.print("Error connecting to MQTT server:");
+        Serial.print("Error connecting to MQTT server: ");
     }
     Serial.println(mqttClient.state());
     delay(1000);
