@@ -10,15 +10,15 @@ import de.cookiejar.cookiejar.error.TimestampTooOldException;
 
 public class CookieJarWeightVisualDelegate {
 
-	private static final double EMPTY_WEIGHT_WITH_TOP = -6615392.0;
+	private static final double EMPTY_WEIGHT_WITH_TOP = -6629079.0;
 	
-	private static final double EMPTY_WEIGHT_MIDDLE = -6615449.5;
+	private static final double EMPTY_WEIGHT_MIDDLE = -6629020.5;
 
-	private static final double EMPTY_WEIGHT_WITHOUT_TOP = -6615507.0;
+	private static final double EMPTY_WEIGHT_WITHOUT_TOP = -6628962.0;
 	
 	private static final double TOLERANCE = 1000000.0;
 
-	private static final double MAXIMUM_WEIGHT = 1000.0;
+	private static final double MAXIMUM_WEIGHT = 1250.0;
 
 	private static final int TIME_LIMIT_IN_SECONDS_UNTIL_EXCEPTION = 120;
 
