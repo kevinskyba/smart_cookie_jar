@@ -61,22 +61,14 @@ public class CookieJarMQTTCallbackImpl implements MqttCallback {
 
 	@Override
 	public void connectionLost(Throwable cause) {
-		// TODO integrate logger
 		log.error("Connection lost because: " + cause);
 		System.exit(1);
 	}
 
 	@Override
-	public void deliveryComplete(IMqttDeliveryToken arg0) {
-		// TODO Auto-generated method stub
-
+	public void deliveryComplete(IMqttDeliveryToken token) {
+		log.debug("delivery complete " + token.toString());
 	}
-
-	// public void sendMessage(String payload) throws MqttException {
-	// MqttMessage message = new MqttMessage(payload.getBytes());
-	// message.setQos(qos);
-	// this.client.publish(this.topic, message); // Blocking publish
-	// }
 
 	@Override
 	public void messageArrived(String topic, MqttMessage message) throws Exception {

@@ -10,7 +10,7 @@
 	<packaging>jar</packaging>
 
 	<name>cookiejar</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Smart cookie jar</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>

@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import de.cookiejar.cookiejar.error.TimestampTooOldException;
 import de.cookiejar.cookiejar.model.CookieJarWeight;
 import de.cookiejar.cookiejar.model.CookieJarWeightRepository;
 import de.cookiejar.cookiejar.model.CookieJarWeightVO;
@@ -28,7 +27,6 @@ public class CookieJarRestController {
 
 	@RequestMapping("/status")
 	public String getStatus() {
-		//String lastValue = "";
 		StringBuilder sb = new StringBuilder();
 		if (repository.findAll() != null && repository.findAll().iterator() != null
 				&& repository.findAll().iterator().hasNext()) {
@@ -51,13 +49,6 @@ public class CookieJarRestController {
 		sb.append("\n");
 		sb.append("Durchschnitt der letzten 3 Werte minus Leergewicht ohne Deckel: ");
 		sb.append((CookieJarWeightVisualDelegate.getAverageValueMinusEmptyWeightWithoutTop(repository)));
-
-//		repository.findTop3ByOrderByIdDesc().forEach(c -> {
-//			sb.append(c.getWeight());
-//			sb.append(" ");
-//			sb.append(c.getTimeStamp());
-//			sb.append("\n");
-//		});
 		return sb.toString();
 	}
 	
@@ -90,10 +81,5 @@ public class CookieJarRestController {
 	@GetMapping("/lastobject")
 	public CookieJarWeightVO getLastObject() {
 		return CookieJarWeightVisualDelegate.getLastObject(repository);
-	}
-	
-	@GetMapping("/throwexc")
-	public Double throwExTest() {
-		throw new TimestampTooOldException("test");
 	}
 }

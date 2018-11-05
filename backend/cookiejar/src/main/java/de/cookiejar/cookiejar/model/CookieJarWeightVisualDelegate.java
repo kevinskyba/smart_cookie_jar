@@ -10,17 +10,17 @@ import de.cookiejar.cookiejar.error.TimestampTooOldException;
 
 public class CookieJarWeightVisualDelegate {
 
-	private static final double EMPTY_WEIGHT_WITH_TOP = -6629079.0;
+	private static final double EMPTY_WEIGHT_WITH_TOP = -6615397.0;
 	
-	private static final double EMPTY_WEIGHT_MIDDLE = -6629020.5;
+	private static final double EMPTY_WEIGHT_MIDDLE = -6615338.5;
 
-	private static final double EMPTY_WEIGHT_WITHOUT_TOP = -6628962.0;
+	private static final double EMPTY_WEIGHT_WITHOUT_TOP = -6615280.0;
 	
 	private static final double TOLERANCE = 1000000.0;
 
 	private static final double MAXIMUM_WEIGHT = 1250.0;
 
-	private static final int TIME_LIMIT_IN_SECONDS_UNTIL_EXCEPTION = 120;
+	private static final int TIME_LIMIT_IN_SECONDS_UNTIL_EXCEPTION = 1200;
 
 	// ./. empty weight with top
 	public static CookieJarWeightVO getAverageObject(CookieJarWeightRepository repository) {
@@ -105,6 +105,9 @@ public class CookieJarWeightVisualDelegate {
 			output.setWeight(input.getWeight() - EMPTY_WEIGHT_MIDDLE);
 		} else {
 			output.setWeight(input.getWeight());
+		}
+		if (output.getWeight() < 0.0) {
+			output.setWeight(0.0);
 		}
 		output.setTimeStamp(input.getTimeStamp());
 		output.setFillLevel(getFillLevelPercentage(output.getWeight()));
