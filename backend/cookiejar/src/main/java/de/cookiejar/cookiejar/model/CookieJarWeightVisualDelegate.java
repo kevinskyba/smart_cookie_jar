@@ -6,24 +6,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import de.cookiejar.cookiejar.error.TimestampTooOldException;
+import org.springframework.stereotype.Component;
 
+import de.cookiejar.cookiejar.error.TareWeightException;
+import de.cookiejar.cookiejar.error.TimestampTooOldException;
+import lombok.NoArgsConstructor;
+
+@Component
+@NoArgsConstructor
 public class CookieJarWeightVisualDelegate {
 
-	private static final double EMPTY_WEIGHT_WITH_TOP = -6615397.0;
-	
-	private static final double EMPTY_WEIGHT_MIDDLE = -6615338.5;
+	private double tareWeightValue = 0.0;
 
-	private static final double EMPTY_WEIGHT_WITHOUT_TOP = -6615280.0;
-	
 	private static final double TOLERANCE = 1000000.0;
 
 	private static final double MAXIMUM_WEIGHT = 1250.0;
 
-	private static final int TIME_LIMIT_IN_SECONDS_UNTIL_EXCEPTION = 1200;
+	private static final double MAXIMUM_TARE_DIFFERENCE = 150.0;
+
+	private static final int TIME_LIMIT_IN_SECONDS_UNTIL_EXCEPTION = 600;
 
 	// ./. empty weight with top
-	public static CookieJarWeightVO getAverageObject(CookieJarWeightRepository repository) {
+	public CookieJarWeightVO getAverageObject(CookieJarWeightRepository repository) {
 		Instant last = null;
 		double weight = 0.0;
 		int counter = 0;
@@ -40,16 +44,17 @@ public class CookieJarWeightVisualDelegate {
 		}
 
 		CookieJarWeightVO average = new CookieJarWeightVO();
-		weight = (weight / ((double) (counter))) - EMPTY_WEIGHT_MIDDLE;
+		weight = (weight / ((double) (counter))) - tareWeightValue;
 		average.setWeight(weight);
 		average.setFillLevel(getFillLevelPercentage(weight));
 		average.setTimeStamp(last);
 
 		return average;
 	}
-	
-	public static CookieJarWeightVO getLastObject(CookieJarWeightRepository repository) {
-		CookieJarWeightVO returnValue = mapCookieJarWeight(repository.findTop3ByOrderByIdDesc().stream().findFirst().orElse(null));
+
+	public CookieJarWeightVO getLastObject(CookieJarWeightRepository repository) {
+		CookieJarWeightVO returnValue = mapCookieJarWeight(
+				repository.findTop3ByOrderByIdDesc().stream().findFirst().orElse(null));
 		if (returnValue.getTimeStamp() == null) {
 			return returnValue;
 		}
@@ -59,7 +64,7 @@ public class CookieJarWeightVisualDelegate {
 		return returnValue;
 	}
 
-	public static double getAverageValue(CookieJarWeightRepository repository) {
+	public double getAverageValue(CookieJarWeightRepository repository) {
 		double value = 0.0;
 		int counter = 0;
 		for (CookieJarWeight cookieJarWeight : repository.findTop3ByOrderByIdDesc()) {
@@ -70,22 +75,14 @@ public class CookieJarWeightVisualDelegate {
 		return value;
 	}
 
-	public static double getAverageValueMinusEmptyWeightWithTop(CookieJarWeightRepository repository) {
-		return (getAverageValue(repository) - EMPTY_WEIGHT_WITH_TOP);
-	}
-
-	public static double getAverageValueMinusEmptyWeightWithoutTop(CookieJarWeightRepository repository) {
-		return (getAverageValue(repository) - EMPTY_WEIGHT_WITHOUT_TOP);
-	}
-
-	public static boolean cookieJarAvailableInProperTime(Instant lastSavedTime) {
+	public boolean cookieJarAvailableInProperTime(Instant lastSavedTime) {
 		if (lastSavedTime == null) {
 			return true;
 		}
 		return (Duration.between(lastSavedTime, Instant.now()).getSeconds() <= TIME_LIMIT_IN_SECONDS_UNTIL_EXCEPTION);
 	}
 
-	public static double getFillLevelPercentage(double weight) {
+	public double getFillLevelPercentage(double weight) {
 		if (weight <= 0) {
 			return 0.0;
 		}
@@ -95,14 +92,14 @@ public class CookieJarWeightVisualDelegate {
 		return weight * 100.0 / MAXIMUM_WEIGHT;
 	}
 
-	public static CookieJarWeightVO mapCookieJarWeight(CookieJarWeight input) {
+	public CookieJarWeightVO mapCookieJarWeight(CookieJarWeight input) {
 		if (input == null) {
 			return new CookieJarWeightVO();
 		}
 		CookieJarWeightVO output = new CookieJarWeightVO();
 		// if needed, remove empty weight
-		if (input.getWeight() < (EMPTY_WEIGHT_MIDDLE + TOLERANCE)) {
-			output.setWeight(input.getWeight() - EMPTY_WEIGHT_MIDDLE);
+		if (input.getWeight() < (tareWeightValue + TOLERANCE)) {
+			output.setWeight(input.getWeight() - tareWeightValue);
 		} else {
 			output.setWeight(input.getWeight());
 		}
@@ -114,11 +111,35 @@ public class CookieJarWeightVisualDelegate {
 		return output;
 	}
 
-	public static List<CookieJarWeightVO> mapCookieJarWeightAsList(List<CookieJarWeight> inputList) {
+	public List<CookieJarWeightVO> mapCookieJarWeightAsList(List<CookieJarWeight> inputList) {
 		if (inputList == null || inputList.isEmpty()) {
 			return new ArrayList<CookieJarWeightVO>();
 		}
 		return inputList.stream().map(cookieJarWeight -> mapCookieJarWeight(cookieJarWeight))
 				.collect(Collectors.toList());
 	}
+
+	public Boolean tareWeight(CookieJarWeightRepository repository) {
+		if (repository.findTop2ByOrderByIdDesc() == null || repository.findTop2ByOrderByIdDesc().isEmpty()
+				|| repository.findTop2ByOrderByIdDesc().size() < 2) {
+			throw new TareWeightException();
+		}
+		List<CookieJarWeight> top2 = repository.findTop2ByOrderByIdDesc();
+		Double firstValue = null;
+		for (CookieJarWeight cookieJarWeight : top2) {
+			if (firstValue == null) {
+				firstValue = Double.valueOf(cookieJarWeight.getWeight());
+			} else {
+				// second step
+				double difference = firstValue.doubleValue() - cookieJarWeight.getWeight();
+				if (Math.abs(difference) > MAXIMUM_TARE_DIFFERENCE) {
+					throw new TareWeightException();
+				} else {
+					this.tareWeightValue = firstValue.doubleValue();
+				}
+			}
+		}
+		return true;
+	}
+
 }

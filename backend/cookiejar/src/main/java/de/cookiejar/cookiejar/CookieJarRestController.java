@@ -19,6 +19,9 @@ public class CookieJarRestController {
 
 	@Autowired
 	CookieJarWeightRepository repository;
+	
+	@Autowired
+	CookieJarWeightVisualDelegate visualDelegate;
 
 	@RequestMapping("/")
 	public String index() {
@@ -42,13 +45,7 @@ public class CookieJarRestController {
 	public String getAverage() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Durchschnitt der letzten 3 Werte: ");
-		sb.append((CookieJarWeightVisualDelegate.getAverageValue(repository)));
-		sb.append("\n");
-		sb.append("Durchschnitt der letzten 3 Werte minus Leergewicht mit Deckel: ");
-		sb.append((CookieJarWeightVisualDelegate.getAverageValueMinusEmptyWeightWithTop(repository)));
-		sb.append("\n");
-		sb.append("Durchschnitt der letzten 3 Werte minus Leergewicht ohne Deckel: ");
-		sb.append((CookieJarWeightVisualDelegate.getAverageValueMinusEmptyWeightWithoutTop(repository)));
+		sb.append((visualDelegate.getAverageValue(repository)));
 		return sb.toString();
 	}
 	
@@ -56,30 +53,23 @@ public class CookieJarRestController {
 	@GetMapping("/last3elements")
 	public List<CookieJarWeightVO> getLast3Elements() {
 		log.info("last 3 elements called");
-		return CookieJarWeightVisualDelegate.mapCookieJarWeightAsList(repository.findTop3ByOrderByIdDesc());
-	}
-	
-	// Durchschnitt der letzten 3 Werte minus Leergewicht mit Deckel
-	@GetMapping("/averageminuswithtop")
-	public Double getAverageDoubleValueTop() {  
-		return CookieJarWeightVisualDelegate.getAverageValueMinusEmptyWeightWithTop(repository);
-	}
-	
-	// Durchschnitt der letzten 3 Werte minus Leergewicht ohne Deckel
-	@GetMapping("/averageminuswithouttop")
-	public Double getAverageDoubleValue() {  
-		return CookieJarWeightVisualDelegate.getAverageValueMinusEmptyWeightWithoutTop(repository);
+		return visualDelegate.mapCookieJarWeightAsList(repository.findTop3ByOrderByIdDesc());
 	}
 	
 	// throws exception, other methods wont
 	@GetMapping("/averageobject")
 	public CookieJarWeightVO getAverageObject() {
-		return CookieJarWeightVisualDelegate.getAverageObject(repository);
+		return visualDelegate.getAverageObject(repository);
 	}
 	
 	// throws exception, other methods wont
 	@GetMapping("/lastobject")
 	public CookieJarWeightVO getLastObject() {
-		return CookieJarWeightVisualDelegate.getLastObject(repository);
+		return visualDelegate.getLastObject(repository);
+	}
+	
+	@GetMapping("/tareweight")
+	public Boolean tareWeight() {
+		return visualDelegate.tareWeight(repository);
 	}
 }
