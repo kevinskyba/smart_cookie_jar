@@ -26,6 +26,7 @@ public class CookieJarRestController {
 	}
 
 	@RequestMapping("/status")
+	@Deprecated
 	public String getStatus() {
 		StringBuilder sb = new StringBuilder();
 		if (repository.findAll() != null && repository.findAll().iterator() != null
@@ -39,6 +40,7 @@ public class CookieJarRestController {
 	}
 
 	@RequestMapping("/getaverage")
+	@Deprecated
 	public String getAverage() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Durchschnitt der letzten 3 Werte: ");
@@ -54,6 +56,7 @@ public class CookieJarRestController {
 	
 	// returns last 3 elements in json format
 	@GetMapping("/last3elements")
+	@Deprecated
 	public List<CookieJarWeightVO> getLast3Elements() {
 		log.info("last 3 elements called");
 		return CookieJarWeightVisualDelegate.mapCookieJarWeightAsList(repository.findTop3ByOrderByIdDesc());
@@ -61,23 +64,24 @@ public class CookieJarRestController {
 	
 	// Durchschnitt der letzten 3 Werte minus Leergewicht mit Deckel
 	@GetMapping("/averageminuswithtop")
+	@Deprecated
 	public Double getAverageDoubleValueTop() {  
 		return CookieJarWeightVisualDelegate.getAverageValueMinusEmptyWeightWithTop(repository);
 	}
 	
 	// Durchschnitt der letzten 3 Werte minus Leergewicht ohne Deckel
 	@GetMapping("/averageminuswithouttop")
+	@Deprecated
 	public Double getAverageDoubleValue() {  
 		return CookieJarWeightVisualDelegate.getAverageValueMinusEmptyWeightWithoutTop(repository);
 	}
 	
-	// throws exception, other methods wont
 	@GetMapping("/averageobject")
+	@Deprecated
 	public CookieJarWeightVO getAverageObject() {
 		return CookieJarWeightVisualDelegate.getAverageObject(repository);
 	}
 	
-	// throws exception, other methods wont
 	@GetMapping("/lastobject")
 	public CookieJarWeightVO getLastObject() {
 		return CookieJarWeightVisualDelegate.getLastObject(repository);

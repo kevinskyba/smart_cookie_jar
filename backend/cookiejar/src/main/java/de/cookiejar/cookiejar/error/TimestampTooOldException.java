@@ -2,6 +2,9 @@ package de.cookiejar.cookiejar.error;
 
 import java.time.Instant;
 
+// Deprecated, since cookiejar doesn't send values frequently anymore.
+// Values will only be sent if there's a change.
+@Deprecated
 public class TimestampTooOldException extends RuntimeException {
 
 	/**

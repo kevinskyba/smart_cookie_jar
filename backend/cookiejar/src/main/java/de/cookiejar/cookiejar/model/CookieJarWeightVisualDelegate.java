@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import de.cookiejar.cookiejar.error.TimestampTooOldException;
-
 public class CookieJarWeightVisualDelegate {
 
 	private static final double EMPTY_WEIGHT_WITH_TOP = -6615397.0;
@@ -35,9 +33,9 @@ public class CookieJarWeightVisualDelegate {
 			++counter;
 		}
 
-		if (!cookieJarAvailableInProperTime(last)) {
-			throw new TimestampTooOldException(last);
-		}
+//		if (!cookieJarAvailableInProperTime(last)) {
+//			throw new TimestampTooOldException(last);
+//		}
 
 		CookieJarWeightVO average = new CookieJarWeightVO();
 		weight = (weight / ((double) (counter))) - EMPTY_WEIGHT_MIDDLE;
@@ -50,12 +48,12 @@ public class CookieJarWeightVisualDelegate {
 	
 	public static CookieJarWeightVO getLastObject(CookieJarWeightRepository repository) {
 		CookieJarWeightVO returnValue = mapCookieJarWeight(repository.findTop3ByOrderByIdDesc().stream().findFirst().orElse(null));
-		if (returnValue.getTimeStamp() == null) {
-			return returnValue;
-		}
-		if (!cookieJarAvailableInProperTime(returnValue.getTimeStamp())) {
-			throw new TimestampTooOldException(returnValue.getTimeStamp());
-		}
+//		if (returnValue.getTimeStamp() == null) {
+//			return returnValue;
+//		}
+//		if (!cookieJarAvailableInProperTime(returnValue.getTimeStamp())) {
+//			throw new TimestampTooOldException(returnValue.getTimeStamp());
+//		}
 		return returnValue;
 	}
 
@@ -78,6 +76,7 @@ public class CookieJarWeightVisualDelegate {
 		return (getAverageValue(repository) - EMPTY_WEIGHT_WITHOUT_TOP);
 	}
 
+	@Deprecated
 	public static boolean cookieJarAvailableInProperTime(Instant lastSavedTime) {
 		if (lastSavedTime == null) {
 			return true;
