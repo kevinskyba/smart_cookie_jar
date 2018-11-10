@@ -16,10 +16,13 @@ public class CookieJarMQTTCallbackConfig {
 	@Value( "${mqtt.uri}")
 	private String uri;
 	
+	@Value( "${mqtt.topic}")
+	private String topic;
+	
 	@Bean
 	public MqttCallback cookieJarCallback() {
 		try {
-			return new CookieJarMQTTCallbackImpl(uri);
+			return new CookieJarMQTTCallbackImpl(uri, topic);
 		} catch (URISyntaxException | MqttException e) {
 			log.error(e.getMessage());
 			return null;

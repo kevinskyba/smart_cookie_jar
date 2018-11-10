@@ -6,4 +6,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 public interface CookieJarWeightRepository extends PagingAndSortingRepository<CookieJarWeight, Long> {
 	public List<CookieJarWeight> findTop3ByOrderByIdDesc();
+	
+	public List<CookieJarWeight> findTop500ByOrderByIdDesc();
 }
