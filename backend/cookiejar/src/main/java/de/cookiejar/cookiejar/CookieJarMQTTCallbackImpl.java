@@ -11,7 +11,6 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import de.cookiejar.cookiejar.model.CookieJarWeight;
 import de.cookiejar.cookiejar.model.CookieJarWeightRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -23,14 +22,16 @@ public class CookieJarMQTTCallbackImpl implements MqttCallback {
 	private CookieJarWeightRepository repository;
 
 	private final int qos = 1;
-	private String topic = "weight";
+	
+	private String topic;
 	private MqttClient client;
 
-	public CookieJarMQTTCallbackImpl(String uri) throws URISyntaxException, MqttException {
-		this(new URI(uri));
+	public CookieJarMQTTCallbackImpl(String uri, String topic) throws URISyntaxException, MqttException {
+		this(new URI(uri), topic);
 	}
 
-	public CookieJarMQTTCallbackImpl(URI uri) throws MqttException {
+	public CookieJarMQTTCallbackImpl(URI uri, String topic) throws MqttException {
+		this.topic = topic;
 		String host = String.format("tcp://%s:%d", uri.getHost(), uri.getPort());
 		String[] auth = this.getAuth(uri);
 		String username = auth[0];
@@ -61,22 +62,14 @@ public class CookieJarMQTTCallbackImpl implements MqttCallback {
 
 	@Override
 	public void connectionLost(Throwable cause) {
-		// TODO integrate logger
 		log.error("Connection lost because: " + cause);
 		System.exit(1);
 	}
 
 	@Override
-	public void deliveryComplete(IMqttDeliveryToken arg0) {
-		// TODO Auto-generated method stub
-
+	public void deliveryComplete(IMqttDeliveryToken token) {
+		log.debug("delivery complete " + token.toString());
 	}
-
-	// public void sendMessage(String payload) throws MqttException {
-	// MqttMessage message = new MqttMessage(payload.getBytes());
-	// message.setQos(qos);
-	// this.client.publish(this.topic, message); // Blocking publish
-	// }
 
 	@Override
 	public void messageArrived(String topic, MqttMessage message) throws Exception {

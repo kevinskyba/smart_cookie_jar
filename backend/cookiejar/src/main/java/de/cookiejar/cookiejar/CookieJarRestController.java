@@ -4,11 +4,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import de.cookiejar.cookiejar.error.TimestampTooOldException;
-import de.cookiejar.cookiejar.model.CookieJarWeight;
+import de.cookiejar.cookiejar.model.ConfigurationVO;
 import de.cookiejar.cookiejar.model.CookieJarWeightRepository;
 import de.cookiejar.cookiejar.model.CookieJarWeightVO;
 import de.cookiejar.cookiejar.model.CookieJarWeightVisualDelegate;
@@ -21,79 +20,53 @@ public class CookieJarRestController {
 	@Autowired
 	CookieJarWeightRepository repository;
 
-	@RequestMapping("/")
+	@Autowired
+	CookieJarWeightVisualDelegate visualDelegate;
+	
+	@GetMapping("/")
 	public String index() {
-		return "Welcome to Cookie Jar. Ask /status for information about weight.";
-	}
-
-	@RequestMapping("/status")
-	public String getStatus() {
-		//String lastValue = "";
-		StringBuilder sb = new StringBuilder();
-		if (repository.findAll() != null && repository.findAll().iterator() != null
-				&& repository.findAll().iterator().hasNext()) {
-			CookieJarWeight next = repository.findAll().iterator().next();
-			sb.append(next.getWeight());
-			sb.append(" time: ");
-			sb.append(next.getTimeStamp());
-		}
-		return sb.toString();
-	}
-
-	@RequestMapping("/getaverage")
-	public String getAverage() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("Durchschnitt der letzten 3 Werte: ");
-		sb.append((CookieJarWeightVisualDelegate.getAverageValue(repository)));
-		sb.append("\n");
-		sb.append("Durchschnitt der letzten 3 Werte minus Leergewicht mit Deckel: ");
-		sb.append((CookieJarWeightVisualDelegate.getAverageValueMinusEmptyWeightWithTop(repository)));
-		sb.append("\n");
-		sb.append("Durchschnitt der letzten 3 Werte minus Leergewicht ohne Deckel: ");
-		sb.append((CookieJarWeightVisualDelegate.getAverageValueMinusEmptyWeightWithoutTop(repository)));
-
-//		repository.findTop3ByOrderByIdDesc().forEach(c -> {
-//			sb.append(c.getWeight());
-//			sb.append(" ");
-//			sb.append(c.getTimeStamp());
-//			sb.append("\n");
-//		});
-		return sb.toString();
+		return "Welcome to Smart Cookie Jar.";
 	}
 	
-	// returns last 3 elements in json format
-	@GetMapping("/last3elements")
-	public List<CookieJarWeightVO> getLast3Elements() {
-		log.info("last 3 elements called");
-		return CookieJarWeightVisualDelegate.mapCookieJarWeightAsList(repository.findTop3ByOrderByIdDesc());
-	}
-	
-	// Durchschnitt der letzten 3 Werte minus Leergewicht mit Deckel
-	@GetMapping("/averageminuswithtop")
-	public Double getAverageDoubleValueTop() {  
-		return CookieJarWeightVisualDelegate.getAverageValueMinusEmptyWeightWithTop(repository);
-	}
-	
-	// Durchschnitt der letzten 3 Werte minus Leergewicht ohne Deckel
-	@GetMapping("/averageminuswithouttop")
-	public Double getAverageDoubleValue() {  
-		return CookieJarWeightVisualDelegate.getAverageValueMinusEmptyWeightWithoutTop(repository);
-	}
-	
-	// throws exception, other methods wont
-	@GetMapping("/averageobject")
-	public CookieJarWeightVO getAverageObject() {
-		return CookieJarWeightVisualDelegate.getAverageObject(repository);
-	}
-	
-	// throws exception, other methods wont
 	@GetMapping("/lastobject")
 	public CookieJarWeightVO getLastObject() {
-		return CookieJarWeightVisualDelegate.getLastObject(repository);
+		log.debug("getLastObject called");
+		return visualDelegate.getLastObject(repository);
 	}
 	
-	@GetMapping("/throwexc")
-	public Double throwExTest() {
-		throw new TimestampTooOldException("test");
+	@GetMapping("/object/{id}")
+	public CookieJarWeightVO findById(@PathVariable String id) {
+		return visualDelegate.getObjectById(repository, id);
+	}
+	
+	@GetMapping("/last500objects")
+	public List<CookieJarWeightVO> getLast500Objects() {
+		return visualDelegate.getLast500Objects(repository);
+	}
+	
+	@GetMapping("/configure/emptyweight/{emptyweight}")
+	public double setEmptyWeight(@PathVariable String emptyweight) {
+		visualDelegate.setEmptyWeight(Double.valueOf(emptyweight).doubleValue());
+		log.debug("Empty weight was set to: " + visualDelegate.getEmptyWeight());
+		return visualDelegate.getEmptyWeight();
+	}
+	
+	@GetMapping("/configure/tolerance/{tolerance}")
+	public double setTolerance(@PathVariable String tolerance) {
+		visualDelegate.setTolerance(Double.valueOf(tolerance).doubleValue());
+		log.debug("Tolerance was set to: " + visualDelegate.getTolerance());
+		return visualDelegate.getTolerance();
+	}
+	
+	@GetMapping("/configure/maximumweight/{maximumweight}")
+	public double setMaximumWeight(@PathVariable String maximumweight) {
+		visualDelegate.setMaximumWeight(Double.valueOf(maximumweight).doubleValue());
+		log.debug("Maximum weight was set to: " + visualDelegate.getMaximumWeight());
+		return visualDelegate.getMaximumWeight();
+	}
+	
+	@GetMapping("/getconfiguration")
+	public ConfigurationVO getCOnfiguration() {
+		return visualDelegate.getConfiguration();
 	}
 }
