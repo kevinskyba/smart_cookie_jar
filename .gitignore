@@ -1,3 +1,5 @@
 .docker
 db_data
 secrets.env
+
+hardware/hardware.code-workspace

@@ -6,7 +6,7 @@
 #include "config.h"
 
 HX711 scale(DATAOUT, CLK);
-
+ 
 float calibration_factor = SCALE_CALIBRATION_FACTOR;
 
 void setup() {
