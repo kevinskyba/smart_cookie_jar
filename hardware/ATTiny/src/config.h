@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-#define POWER_ESP                   1
+#define POWER_ESP                   PB1
 
 #define MAX_WAIT_FOR_ESP            20000UL
 

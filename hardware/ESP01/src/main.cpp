@@ -12,17 +12,18 @@ void loop() {
     int error = 0;
     float value = i2c_request_float_from_address(ATTINY_I2C_ADDRESS, error);
 
-    if (error != 0) {
-        send_int_to_mqtt(SCJ_MQTT_SERVER, SCJ_MQTT_PORT, SCJ_MQTT_ID, SCJ_MQTT_USER, SCJ_MQTT_PASSWORD, "error", error);
-    } else if(connect_wifi(SCJ_WIFI_SSID, SCJ_WIFI_PASSWORD)) {
-        send_float_to_mqtt(SCJ_MQTT_SERVER, SCJ_MQTT_PORT, SCJ_MQTT_ID, SCJ_MQTT_USER, SCJ_MQTT_PASSWORD, "weight", value);
+    if(connect_wifi(SCJ_WIFI_SSID, SCJ_WIFI_PASSWORD)) {
+        if (error != 0) {
+            send_int_to_mqtt(SCJ_MQTT_SERVER, SCJ_MQTT_PORT, SCJ_MQTT_ID, SCJ_MQTT_USER, SCJ_MQTT_PASSWORD, "error", error);
+        } else {
+            send_float_to_mqtt(SCJ_MQTT_SERVER, SCJ_MQTT_PORT, SCJ_MQTT_ID, SCJ_MQTT_USER, SCJ_MQTT_PASSWORD, "weight", value);
+        }
     }
 
-    delay(500);
+    delay(100);
     disconnect_wifi();
-    delay(500);
+    delay(100);
     i2c_send(ATTINY_I2C_ADDRESS, 1);
-    delay(25000);
-
-    delay(3000);
+    delay(100);
+    ESP.deepSleep(0, RF_DEFAULT);
 }

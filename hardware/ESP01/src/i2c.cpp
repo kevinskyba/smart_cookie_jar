@@ -9,6 +9,7 @@ void i2c_start(int sdaPin, int sdlPin) {
 }
 
 float i2c_request_float_from_address(uint8_t address, int &error) {
+    Wire.setTimeout(5000);
     Wire.requestFrom(address, 4);
 
     if (!Wire.available()) {
