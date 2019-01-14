@@ -5,6 +5,7 @@
 
 #define I2C_SDA_PIN                 0
 #define I2C_SDL_PIN                 2
+#define I2C_RETRIES                 3
 
 #define WIFI_TIME_TO_CONNECT        15000
 

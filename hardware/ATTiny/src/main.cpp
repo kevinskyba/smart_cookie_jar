@@ -34,7 +34,6 @@ void setup() {
 
     scale_begin(SCALE_DT, SCALE_CLK);
 
-    i2c_start(I2C_ADDRESS);
     i2c_on_request(onI2CRequest);
     i2c_on_receive(onI2CReceive);
 }
@@ -57,8 +56,9 @@ void loop() {
         start = millis();
 
         power_esp_on();
+        i2c_start(I2C_ADDRESS);
 
-        while (!espDone && start + MAX_WAIT_FOR_ESP > millis()) {
+        while (!espDone && start + MAX_WAIT_FOR_ESP > millis() ) {
             i2c_loop();
         }
 
@@ -71,11 +71,13 @@ void loop() {
 }
 
 void power_esp_on() {
+    digitalWrite(POWER_ESP, LOW);
+    delay(10);
     digitalWrite(POWER_ESP, HIGH);
 }
 
 void power_esp_off() {
-    digitalWrite(POWER_ESP, LOW);
+    //digitalWrite(POWER_ESP, LOW);
 }
 
 void power_hx711_on() {

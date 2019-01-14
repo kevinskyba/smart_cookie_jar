@@ -5,7 +5,6 @@ float bytes_to_float(byte* bytes);
 
 void i2c_start(int sdaPin, int sdlPin) {
     Wire.begin(sdaPin, sdlPin);
-    Wire.setClockStretchLimit(1500);
 }
 
 float i2c_request_float_from_address(uint8_t address, int &error) {
