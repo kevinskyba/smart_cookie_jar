@@ -1,0 +1,9 @@
+{
+  "name": "save_battery",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "mysql": "^2.16.0"
+  }
+}
