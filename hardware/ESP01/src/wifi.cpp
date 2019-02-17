@@ -1,7 +1,6 @@
 #include "wifi.h"
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
-#include <ESP8266HTTPClient.h>
 #include "config.h"
 #include <Esp.h>
 
@@ -27,6 +26,7 @@ bool connect_wifi(const char* ssid, const char* password) {
             return false;
         }
     }
+
     return true;
 }
 

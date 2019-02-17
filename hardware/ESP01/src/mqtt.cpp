@@ -1,19 +1,21 @@
 #include "mqtt.h"
-#include "wifi.h"
-#include <Arduino.h>
-#include <ESP8266HTTPClient.h>
+#include <ESP8266WiFi.h>
+#include <WiFiClientSecure.h>
 #include <PubSubClient.h>
 #include <Esp.h>
-#include "config.h"
 
-bool send_payload(const char* server, int port, const char* id, const char* user, const char* password, const char* topic, String payload) {
+bool send_payload(const char* server, int port, const char* id, const uint8_t* root_ca, const uint8_t* cert_pem, const uint8_t* private_key, const char* topic, String payload) {
     ESP.wdtFeed();
-    WiFiClient wifiClient;
+    WiFiClientSecure wifiClient;
+    wifiClient.setCACert(root_ca, 1188);
+    wifiClient.setCertificate(cert_pem, 1224);
+    wifiClient.setPrivateKey(private_key, 1679);
+
     wifiClient.setTimeout(MQTT_SOCKET_TIMEOUT * 1000);
     PubSubClient mqttClient(wifiClient);
     mqttClient.setServer(server, port);
 
-    if(mqttClient.connect(id, user, password)) {
+    if(mqttClient.connect(id)) {
         ESP.wdtFeed();
         if (mqttClient.publish(topic, (char*)payload.c_str())) {
             ESP.wdtFeed();
@@ -29,14 +31,6 @@ bool send_payload(const char* server, int port, const char* id, const char* user
     return false;
 }
 
-bool send_float_to_mqtt(const char* server, int port, const char* id, const char* user, const char* password, const char* topic, float value) {
-    return send_payload(server, port, id, user, password, topic, String(value, 1));
-}
-
-bool send_int_to_mqtt(const char* server, int port, const char* id, const char* user, const char* password, const char* topic, int value) {
-    return send_payload(server, port, id, user, password, topic, String(value));
-}
-
-bool send_string_to_mqtt(const char* server, int port, const char* id, const char* user, const char* password, const char* topic, const char* value) {
-    return send_payload(server, port, id, user, password, topic, value);
+bool send_string_to_mqtt(const char* server, int port, const char* id, const uint8_t* root_ca, const uint8_t* cert_pem, const uint8_t* private_key, const char* topic, const char* value) {
+    return send_payload(server, port, id, root_ca, cert_pem, private_key, topic, value);
 }

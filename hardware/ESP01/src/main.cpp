@@ -34,11 +34,11 @@ void loop() {
         
     if(value != 0 && connect_wifi(SCJ_WIFI_SSID, SCJ_WIFI_PASSWORD)) {
         if (error != 0) {
-            send_int_to_mqtt(SCJ_MQTT_SERVER, SCJ_MQTT_PORT, SCJ_MQTT_ID, SCJ_MQTT_USER, SCJ_MQTT_PASSWORD, "error", error);
+            send_string_to_mqtt(SCJ_MQTT_SERVER, SCJ_MQTT_PORT, SCJ_MQTT_ID, SCJ_MQTT_ROOT_CA, SCJ_MQTT_CERT_PEM, SCJ_MQTT_PRIVATE_KEY, "error", (String("{ \"error\": \"") + String(value) + String("\"}")).c_str());
         } else if (isnan(value)) {
-            send_string_to_mqtt(SCJ_MQTT_SERVER, SCJ_MQTT_PORT, SCJ_MQTT_ID, SCJ_MQTT_USER, SCJ_MQTT_PASSWORD, "error", (String("nan: ") + String(value, 1)).c_str());
+            send_string_to_mqtt(SCJ_MQTT_SERVER, SCJ_MQTT_PORT, SCJ_MQTT_ID, SCJ_MQTT_ROOT_CA, SCJ_MQTT_CERT_PEM, SCJ_MQTT_PRIVATE_KEY, "error", (String("{ \"error\": \"nan: ") + String(value, 1) + String("\"}")).c_str());
         } else {
-            send_float_to_mqtt(SCJ_MQTT_SERVER, SCJ_MQTT_PORT, SCJ_MQTT_ID, SCJ_MQTT_USER, SCJ_MQTT_PASSWORD, "weight", value);
+            send_string_to_mqtt(SCJ_MQTT_SERVER, SCJ_MQTT_PORT, SCJ_MQTT_ID, SCJ_MQTT_ROOT_CA, SCJ_MQTT_CERT_PEM, SCJ_MQTT_PRIVATE_KEY, "weight", (String("{ \"weight\": \"") + String(value, 1) + String("\"}")).c_str());
         }
 
         // Not working right now
