@@ -1,5 +1,6 @@
 #include "i2c.h"
 #include <Wire.h>
+#include <Esp.h>
 
 float bytes_to_float(byte* bytes);
 
@@ -8,8 +9,10 @@ void i2c_start(int sdaPin, int sdlPin) {
 }
 
 float i2c_request_float_from_address(uint8_t address, int &error) {
+    ESP.wdtFeed();
     Wire.setTimeout(5000);
     Wire.requestFrom(address, 4);
+    ESP.wdtFeed();
 
     if (!Wire.available()) {
         error = 70;

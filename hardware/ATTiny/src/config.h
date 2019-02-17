@@ -5,7 +5,7 @@
 
 #define POWER_ESP                   PB1
 
-#define MAX_WAIT_FOR_ESP            20000UL
+#define MAX_WAIT_FOR_ESP            3000UL
 
 #define SLEEP_CYCLES                2
 #define SLEEP_MS                    16000UL

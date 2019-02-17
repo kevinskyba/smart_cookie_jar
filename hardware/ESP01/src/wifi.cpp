@@ -3,8 +3,11 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 #include "config.h"
+#include <Esp.h>
 
 bool connect_wifi(const char* ssid, const char* password) {
+
+    ESP.wdtFeed();
 
     // Start by connecting to WiFi network
     WiFi.begin(ssid, password);
@@ -18,6 +21,7 @@ bool connect_wifi(const char* ssid, const char* password) {
             return false;
         }
         delay(500);
+        ESP.wdtFeed();
         // Only try for X seconds.
         if (millis() - wifiConnectStart > WIFI_TIME_TO_CONNECT) {
             return false;

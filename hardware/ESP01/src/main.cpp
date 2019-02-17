@@ -3,10 +3,15 @@
 #include "config.h"
 #include "wifi.h"
 #include "mqtt.h"
+#include "battery.h"
 
 int i = 0;
+float batteryValue;
 
 void setup() {
+    battery_init(BATTERY_PIN);
+    batteryValue = battery_read_voltage(BATTERY_PIN, BATTERY_R1, BATTERY_R2);
+    ESP.wdtEnable(WDTO_8S);
     delay(1000);
     i2c_start(I2C_SDA_PIN, I2C_SDL_PIN);
 }
@@ -26,9 +31,8 @@ void loop() {
             error = 40;
         }
     }
-
         
-    if(connect_wifi(SCJ_WIFI_SSID, SCJ_WIFI_PASSWORD)) {
+    if(value != 0 && connect_wifi(SCJ_WIFI_SSID, SCJ_WIFI_PASSWORD)) {
         if (error != 0) {
             send_int_to_mqtt(SCJ_MQTT_SERVER, SCJ_MQTT_PORT, SCJ_MQTT_ID, SCJ_MQTT_USER, SCJ_MQTT_PASSWORD, "error", error);
         } else if (isnan(value)) {
@@ -36,12 +40,14 @@ void loop() {
         } else {
             send_float_to_mqtt(SCJ_MQTT_SERVER, SCJ_MQTT_PORT, SCJ_MQTT_ID, SCJ_MQTT_USER, SCJ_MQTT_PASSWORD, "weight", value);
         }
+
+        // Not working right now
+        //send_float_to_mqtt(SCJ_MQTT_SERVER, SCJ_MQTT_PORT, SCJ_MQTT_ID, SCJ_MQTT_USER, SCJ_MQTT_PASSWORD, "battery", batteryValue);
     }
 
     delay(100);
     disconnect_wifi();
     delay(100);
-    i2c_send(ATTINY_I2C_ADDRESS, 1);
-    delay(100);
+    ESP.wdtDisable();
     ESP.deepSleep(0, RF_DEFAULT);
 }

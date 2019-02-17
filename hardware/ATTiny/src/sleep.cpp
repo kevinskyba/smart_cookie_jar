@@ -44,7 +44,7 @@ bool was_sleeping() {
 }
 
 void reset_sleeping() {
-    f_wdt = 0;
+    wdt_reset();
 }
 
 void setup_sleep() {
@@ -55,15 +55,14 @@ void setup_sleep() {
     cbi(MCUCR, SM0);
 
     setup_watchdog(9);
+
+    wdt_enable(WDTO_8S);
 }
 
 void go_sleep() {
     wdt_reset();
-    cli ();   // don't want interrupts right now
     ADCSRA &= ~(1<<ADEN);
     set_sleep_mode(SLEEP_MODE_PWR_DOWN);
     sleep_enable();
-    sei();
     sleep_cpu();
-    wdt_disable(); 
 }
