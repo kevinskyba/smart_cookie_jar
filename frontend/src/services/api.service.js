@@ -9,9 +9,9 @@ class APIService {
 
     getStatus() {
         return new Promise((resolve, reject) => {
-            axios({ method: "GET", url: process.env.VUE_APP_BACKEND_URL + '/lastobject'}).then(res => {
-                if (res.data && res.data.fillLevel !== undefined) {
-                    resolve(res.data.fillLevel);
+            axios({ method: "GET", url: process.env.VUE_APP_BACKEND_URL + '/v1/cookie-jar/state'}).then(res => {
+                if (res["data"] !== undefined && res["data"]["percentage"] !== undefined) {
+                    resolve(res["data"]["percentage"]);
                 } else {
                     reject("Something is wrong in the data: " + JSON.stringify(res.data));
                 }

@@ -8,7 +8,7 @@ class DataService {
 
         this.data = new Rx.Subject();
 
-        Rx.Observable.timer(0, 5000).subscribe(() => {
+        Rx.Observable.timer(0, 10000).subscribe(() => {
             this.apiService.getStatus().then((status) => {
                 this.data.onNext(status);
             }).catch((err) => {
