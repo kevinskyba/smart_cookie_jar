@@ -31,8 +31,8 @@ void loop() {
             error = 40;
         }
     }
-        
-    if(value != 0 && connect_wifi(SCJ_WIFI_SSID, SCJ_WIFI_PASSWORD)) {
+
+    if (value != -12345) {
         if (error != 0) {
             send_string_to_mqtt(SCJ_MQTT_SERVER, SCJ_MQTT_PORT, SCJ_MQTT_ID, SCJ_MQTT_ROOT_CA, SCJ_MQTT_CERT_PEM, SCJ_MQTT_PRIVATE_KEY, "error", (String("{ \"error\": \"") + String(value) + String("\"}")).c_str());
         } else if (isnan(value)) {
@@ -40,9 +40,6 @@ void loop() {
         } else {
             send_string_to_mqtt(SCJ_MQTT_SERVER, SCJ_MQTT_PORT, SCJ_MQTT_ID, SCJ_MQTT_ROOT_CA, SCJ_MQTT_CERT_PEM, SCJ_MQTT_PRIVATE_KEY, "weight", (String("{ \"weight\": \"") + String(value, 1) + String("\"}")).c_str());
         }
-
-        // Not working right now
-        //send_float_to_mqtt(SCJ_MQTT_SERVER, SCJ_MQTT_PORT, SCJ_MQTT_ID, SCJ_MQTT_USER, SCJ_MQTT_PASSWORD, "battery", batteryValue);
     }
 
     delay(100);

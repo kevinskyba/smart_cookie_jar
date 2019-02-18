@@ -14,7 +14,6 @@
 #define BATTERY_R2                  22000.0
 
 #define WIFI_TIME_TO_CONNECT        15000
-#define WIFI_TIMZONE                1
 
 #include "secrets.h"
 
