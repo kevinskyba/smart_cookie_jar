@@ -19,9 +19,7 @@ float read_delayed_scale_weight_average() {
     while(true) {
         float measurements[SCALE_WEIGHT_REPETITIONS];
         for (int i = 0; i < SCALE_WEIGHT_REPETITIONS; i++) {
-            scale->power_up();
             measurements[i] = scale->get_units();
-            scale->power_down();
             if (i != SCALE_WEIGHT_REPETITIONS - 1) {
                 delay(SCALE_MEASUREMENT_DELAY);
             }

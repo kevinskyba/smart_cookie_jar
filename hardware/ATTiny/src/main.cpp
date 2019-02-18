@@ -15,11 +15,6 @@ void power_hx711_off();
 float weight __attribute__((section(".noinit")));
 int weightSavedFlag __attribute__((section(".noinit")));
 
-bool espDone;
-
-bool _espWaitState;
-unsigned long start;
-
 void onI2CRequest() {
     if (weightSavedFlag != 12345) {
         i2c_send_float(0);
@@ -29,16 +24,14 @@ void onI2CRequest() {
 }
 
 void onI2CReceive(uint8_t data) {
-    if (data == 1) {
-        espDone = true;
-    }
+
 }
 
 void setup() {
     setup_sleep();
     
     if (weightSavedFlag != 12345) {
-        weight = 0;
+        weight = -12345;
     }
 
     scale_begin(SCALE_DT, SCALE_CLK);
@@ -48,9 +41,9 @@ void setup() {
     
     reset_sleeping();
 
-    power_hx711_on();
-    float newWeight = read_scale_weight();
-    power_hx711_off();
+    scale_power_on();
+    float newWeight = read_delayed_scale_weight_average();
+    scale_power_down();
 
     bool exceedsOffset = abs(newWeight - weight) > REQUIRED_WEIGHT_OFFSET;
     if (exceedsOffset) {
@@ -58,12 +51,9 @@ void setup() {
         weightSavedFlag = 12345;
 
         // Wake up ESP
-        espDone = false;
-        _espWaitState = true;
-        start = millis();
-
         reset_sleeping();
         power_esp_on();
+
         i2c_start(I2C_ADDRESS);
     }
 
@@ -75,25 +65,16 @@ void loop() {
 }
 
 void power_esp_on() {
+
+    // Make sure I2C pins are both high, since this is required for proper esp boot mode
     pinMode(0, OUTPUT);
     pinMode(2, OUTPUT);
     digitalWrite(0, HIGH);
     digitalWrite(2, HIGH);
+
     delay(50);
     pinMode(POWER_ESP, OUTPUT);
     digitalWrite(POWER_ESP, LOW);
     delay(150);
     digitalWrite(POWER_ESP, HIGH);
-}
-
-void power_esp_off() {
-    //digitalWrite(POWER_ESP, LOW);
-}
-
-void power_hx711_on() {
-    scale_power_on();
-}
-
-void power_hx711_off() {
-    scale_power_down();
 }
