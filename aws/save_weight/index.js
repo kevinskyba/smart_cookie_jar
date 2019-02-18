@@ -26,6 +26,8 @@ exports.handler = function(event, context, callback) {
         let timestamp = body["timestamp"];
         let value = body["weight"];
 
+        value = value - parseFloat(process.env.TARE);
+
         let sql = "INSERT INTO weight_data (timestamp, value) VALUES ('" + timestamp + "', '" + value + "')";
         connection.query(sql, function(err, result) {
             if (err) {
