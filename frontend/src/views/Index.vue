@@ -1,8 +1,9 @@
 <template>
     <div class="index">
         <h1 class="header-text">Smart Cookie Jar</h1>
-        <div class="status-text">Derzeit scheint die Dose zu <b>{{status}}%</b> mit Keksen befüllt zu sein.</div>
-        <cookie class="cookie" v-bind:value="status"></cookie>
+        <div class="status-text" v-if="error == null">Derzeit scheint die Dose zu <b>{{status}}%</b> mit Keksen befüllt zu sein.</div>
+        <div class="status-text" v-if="error != null">{{error}}</div>
+        <cookie class="cookie" v-bind:value="status" v-bind:error="hasError"></cookie>
         <span class="legal-corner">Alle Angaben ohne Gewähr.<br>Der Rechtsweg ist ausgeschlossen.</span>
         <footer>Created with VueJS, AWS, Arduino and <img src="/cookie_icons/100.png">.</footer>
     </div>
@@ -16,12 +17,24 @@
         components: {Cookie},
         data: function() {
             return {
-                status: 0
+                status: 0,
+                error: null
+            }
+        },
+        computed: {
+            hasError: function() {
+                return this.error != null;
             }
         },
         created() {
             this.$dataService.data.subscribe((status) => {
+                this.error = null;
                 this.status = status;
+                document.title = status.toString() + "%";
+            });
+            this.$dataService.error.subscribe(() => {
+                this.error = "Fehler beim Abrufen der Daten.";
+                document.title = "Fehler";
             });
         }
     }

@@ -8,7 +8,8 @@
     export default {
         name: "Cookie",
         props: {
-            value: Number
+            value: Number,
+            error: Boolean
         },
         computed: {
             normalizedValue() {
@@ -18,6 +19,7 @@
             },
 
             imagePath() {
+                if (this.error) { return `/cookie_icons/error.png`; }
                 let nValue = this.normalizedValue;
                 return `/cookie_icons/${nValue}.png`;
             }
