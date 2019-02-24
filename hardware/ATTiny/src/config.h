@@ -5,9 +5,7 @@
 
 #define POWER_ESP                   PB1
 
-#define MAX_WAIT_FOR_ESP            3000UL
-
-#define REQUIRED_WEIGHT_OFFSET      50    
+#define REQUIRED_WEIGHT_OFFSET      40    
 
 #define I2C_ADDRESS                 1
 

@@ -32,7 +32,7 @@ void loop() {
         }
     }
 
-    if (value != -12345) {
+    if (value != -12345 && connect_wifi(SCJ_WIFI_SSID, SCJ_WIFI_PASSWORD)) {
         if (error != 0) {
             send_string_to_mqtt(SCJ_MQTT_SERVER, SCJ_MQTT_PORT, SCJ_MQTT_ID, SCJ_MQTT_ROOT_CA, SCJ_MQTT_CERT_PEM, SCJ_MQTT_PRIVATE_KEY, "error", (String("{ \"error\": \"") + String(value) + String("\"}")).c_str());
         } else if (isnan(value)) {

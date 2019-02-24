@@ -45,7 +45,7 @@ void setup() {
     float newWeight = read_delayed_scale_weight_average();
     scale_power_down();
 
-    bool exceedsOffset = abs(newWeight - weight) > REQUIRED_WEIGHT_OFFSET;
+    bool exceedsOffset = fabs(newWeight - weight) > REQUIRED_WEIGHT_OFFSET;
     if (exceedsOffset) {
         weight = newWeight;
         weightSavedFlag = 12345;

@@ -1,6 +1,7 @@
 #include "scale.h"
 #include "config.h"
 #include <HX711.h>
+#include <math.h>
 
 HX711* scale;
 
@@ -29,7 +30,7 @@ float read_delayed_scale_weight_average() {
         float average = firstMeasurement;
         bool error = false;
         for (int i = 1; i < SCALE_WEIGHT_REPETITIONS; i++) {
-            if (abs(firstMeasurement - measurements[i]) > SCALE_MAX_OFFSET) {
+            if (fabs(firstMeasurement - measurements[i]) > SCALE_MAX_OFFSET) {
                 error = true;
                 break;
             } else {
