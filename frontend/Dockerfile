@@ -6,12 +6,10 @@ RUN npm install -g http-server
 # make the 'app' folder the current working directory
 WORKDIR /app
 
-# copy project files and folders to the current working directory (i.e. 'app' folder)
-COPY . .
-
-RUN rm -rf node_modules
-
+COPY package.json package.json
 RUN npm install
+
+COPY . .
 
 # build app for production with minification
 RUN npm run build
